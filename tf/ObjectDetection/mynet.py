@@ -51,7 +51,7 @@ def Mynet(inputs, train=True):
     X = tf.keras.layers.UpSampling2D(2, interpolation='bilinear')(X)
     X = tf.keras.layers.Conv2D(9, (3, 3), padding='same', activation='relu')(X)
     X = tf.keras.layers.UpSampling2D(2, interpolation='bilinear')(X)
-    imgDeconv = tf.keras.layers.Conv2D(3, (3, 3), padding='same', activation='relu')(X)
+    imgDeconv = tf.keras.layers.Conv2D(1, (3, 3), padding='same', activation='relu')(X)
 
     X = tf.keras.layers.UpSampling2D(2, interpolation='bilinear')(imgConv)
     X = tf.keras.layers.Conv2D(64, (3, 3), padding='same', activation='relu')(X)
@@ -66,9 +66,9 @@ def Mynet(inputs, train=True):
 
     X = tf.keras.layers.Conv2D(8, (3, 3), padding='same', activation='relu')(X)
     if train:
-        imgLab = tf.keras.layers.Conv2D(1, (3, 3), padding='same', activation='sigmoid')(X)
+        imgLab = tf.keras.layers.Conv2D(cfg.POINTS_NUMBER, (3, 3), padding='same', activation='sigmoid')(X)
     else:
-        imgLab = tf.keras.layers.Conv2D(1, (3, 3), padding='same', activation='sigmoid', name='out')(X)
+        imgLab = tf.keras.layers.Conv2D(cfg.POINTS_NUMBER, (3, 3), padding='same', activation='sigmoid', name='out')(X)
 
     return [imgDeconv, imgLab]
 

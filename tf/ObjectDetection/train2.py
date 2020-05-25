@@ -14,7 +14,7 @@ model = tf.keras.Model(inputs, [imgDeconv, imgLab])
 
 
 logdir = "./data/log"
-optimizer = tf.keras.optimizers.Adam(0.0002)
+optimizer = tf.keras.optimizers.Adam(0.002)
 if os.path.exists(logdir):
     shutil.rmtree(logdir)
 writer = tf.summary.create_file_writer(logdir)
@@ -35,13 +35,13 @@ def learningModel(image_data, target):
         meanLoss = tf.reduce_mean(tf.keras.losses.mean_squared_error(img, image_data)) / 50# / 5000.0
 
         target2 = target * 0.9 + 0.05
-        softmaxLoss = tf.reduce_mean(tf.square(target2 - lab) * (target * 50 + 1))
+        softmaxLoss = tf.reduce_mean(tf.square(target2 - lab) * tf.nn.relu(lab+target*10-0.2))
+
         # target2 = target*0.9 + 0.05
         # softmaxLoss = tf.reduce_mean(tf.keras.losses.mean_squared_error(tf.expand_dims(target2, -1), lab) * (target * 10 + 1))
 
         # y_onehot = tf.one_hot(target, depth=2)
         # softmaxLoss = tf.keras.losses.categorical_crossentropy(y_onehot, lab, from_logits=True)
-
 
         #
         # softmaxLoss = softmaxLoss * (target * 2 + 1)
@@ -70,14 +70,14 @@ def learningModel(image_data, target):
 
 
 global_steps = 0
-# model.load_weights('oldModel.h5')
+model.load_weights('oldModel2.h5')
 trainset = NpDataset('train')
 for epoch in range(cfg.TRAIN.EPOCHS):
     for image_data, target in trainset:
         learningModel(image_data, target)
         global_steps += 1
         tf.print(global_steps)
-    model.save("oldModel.h5")
+    model.save("oldModel2.h5")
     tf.print("saveModel")
 
 
