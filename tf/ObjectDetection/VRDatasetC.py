@@ -118,7 +118,7 @@ if __name__ == '__main__':
 
         blank = lab[3].numpy()
         labTem = np.zeros([cfg.TRAIN.INPUT_SIZE,cfg.TRAIN.INPUT_SIZE])
-        
+
         for i in range(4):
             tem = blank[:,:,i]
             ret, binary = cv2.threshold(tem, 0.7, 1, cv2.THRESH_BINARY)
