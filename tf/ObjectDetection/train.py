@@ -11,7 +11,7 @@ size = cfg.TRAIN.INPUT_SIZE
 inputs = tf.keras.Input(shape=(size, size,1))
 imgDeconv, imgLab = mynet.Mynet(inputs)
 model = tf.keras.Model(inputs, [imgDeconv, imgLab])
-
+keras.utils.plot_model(model, show_shapes=True, show_layer_names=True)
 
 logdir = "./data/log"
 optimizer = tf.keras.optimizers.Adam(0.0002)

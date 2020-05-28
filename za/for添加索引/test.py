@@ -1,0 +1,1 @@
+for i, (src, lable) in enumerate(train_dateset):
