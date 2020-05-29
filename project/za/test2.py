@@ -27,18 +27,21 @@ def imgRun(threadName, delay):
 
 
 def type1Run(tt):
-
+    global xyflag
+    global xygetToFlag
     #开始并等待移动完成
     if imgType == tt:
         xyNow = imgxy
-        xyflag |= 0x01
         xygetToFlag = 0
-    for i in range(10):
+        xyflag |= 0x01
+    else:
+        raise Exception('print(a)')
+    for i in range(100):
         time.sleep(0.1)  # 100ms
         if xygetToFlag == 1:
             break
         if i > 8:
-            raise Exception('print(a)')
+            raise Exception('10s 没有移动到位置')
 
     #按下
 
@@ -50,12 +53,13 @@ x = 0
 y = 0
 
 _thread.start_new_thread(xyRun, ("Thread-1", 2, ))
-while 1:
+while True:
     str = input("in:")
     if str == "n":
        flag |= 0x01
     elif str == "l":
        flag &= ~0x01
+
     #识别结果 Detection x,y
     if detection == targetDetection: # 已经切换到目标图像
         if detection == 0:  # 初始要按开始

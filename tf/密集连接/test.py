@@ -2,7 +2,6 @@
 import numpy as np
 import random
 import tensorflow as tf
-from tensorflow.keras import models,layers,optimizers
 import matplotlib.pyplot as plt
 
 class NpDataset(object):
@@ -20,7 +19,7 @@ class NpDataset(object):
         self.yData = np.zeros([self.annotations.shape[0], self.xData.shape[0]])
         for i in range(self.annotations.shape[0]):
             for j in range(self.xData.shape[0]):
-                self.yData[i,j] = self.annotations[i,0] * self.xData[j] + self.annotations[i,1]
+                self.yData[i,j] = (self.xData[j] -0.5)**2 * self.annotations[i,0]*30 + self.annotations[i,1]
 
         self.num_samples = self.annotations.shape[0]
 
@@ -62,8 +61,23 @@ class NpDataset(object):
 #     break
 
 #%%
+def layers(inputs,units,activation=None):
+    l = tf.keras.layers.Dense(units,activation=activation)(inputs)
+    print(inputs.shape)
+    print(l.shape)
+    x = tf.concat([inputs, l], 1)
+    return l, x
+
 tf.keras.backend.clear_session()
 
+# inputs = tf.keras.Input(shape=(25))
+# _,x = layers(inputs,10, "relu")
+# _,x = layers(x,10, "relu")
+# l1,x = layers(x,25)
+# _,x = layers(l1,20, "relu")
+# _,x = layers(l1,20, "relu")
+# l2,x = layers(x,25, "relu")
+# model = tf.keras.Model(inputs, [l1, l2])
 inputs = tf.keras.Input(shape=(25))
 x = tf.keras.layers.Dense(50,activation="relu")(inputs)
 x = tf.keras.layers.Dense(50,activation="relu")(x)
@@ -72,25 +86,26 @@ x = tf.keras.layers.Dense(50,activation="relu")(x1)
 x = tf.keras.layers.Dense(50,activation="relu")(x)
 x2 = tf.keras.layers.Dense(25)(x)
 model = tf.keras.Model(inputs, [x1, x2])
+
 tf.keras.utils.plot_model(model, show_shapes=True, show_layer_names=True)
 
 # %%
 
-optimizer = tf.keras.optimizers.Adam(0.0002)
+optimizer = tf.keras.optimizers.Adam(0.02)
 global_steps = 0
 trainset = NpDataset('train')
 for epoch in range(10):
     for image_data, target in trainset:
         with tf.GradientTape() as tape:
             lab1,lab2 = model(image_data, training=True)
-            loss = tf.reduce_mean(tf.square(target - lab1)) + tf.reduce_mean(tf.square(target - lab2))
+            loss = tf.reduce_mean(tf.square(target - lab1)) + tf.reduce_mean(tf.square(target - lab2))*3
         gradients = tape.gradient(loss, model.trainable_variables)
         optimizer.apply_gradients(zip(gradients, model.trainable_variables))
         global_steps += 1
         tf.print(global_steps,loss)
     tf.print("save model")
     model.save("oldModel.h5")
-
+#%%
 train_dateset = NpDataset('train')
 x = np.arange(0,25)
 for i, (src, lable) in enumerate(train_dateset):
@@ -102,9 +117,10 @@ for i, (src, lable) in enumerate(train_dateset):
 
     # plt.plot(x,src[2])
     
-    plt.plot(x,lable[2])
-    plt.plot(x,lab1[2].numpy())
-    plt.plot(x,lab2[2].numpy())
+    plt.plot(x,lable[2], label='line 1')
+    plt.plot(x,lab1[2].numpy(), label='line 2')
+    plt.plot(x,lab2[2].numpy(), label='line 3')
+    plt.legend()
     plt.show()
 
     if i > 3:

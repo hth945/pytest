@@ -45,7 +45,7 @@ def MotorSet(serialX, m1, m2, t):
         time.sleep(t)
         runCmd(serialX, 'setmotorB8:0')
         runCmd(serialX, 'setmotorB9:0')
-    print(m1,m2)
+    print(m1, m2)
 
 
 def getAction(effector,target):
@@ -101,17 +101,17 @@ while(key != ord('q')):
     hsv=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
     mask=cv2.inRange(hsv,red_lower,red_uper)
 
-    mask=cv2.erode(mask,None,iterations=2)
-    mask=cv2.dilate(mask,None,iterations=2)
+    mask=cv2.erode(mask, None, iterations=2)
+    mask=cv2.dilate(mask, None, iterations=2)
 
-    cnts=cv2.findContours(mask.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
+    cnts=cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
 
     img = frame.copy()
     # cv2.drawContours(img, cnts, -1, (255, 255, 255), 3) #画所有边界
     img2 = cv2.bitwise_and(img,img,mask=mask)  #过滤边界外的图像
     cv2.imshow("img2", img2)
 
-    if len(cnts)>0:
+    if len(cnts) > 0:
         cnt = max (cnts,key=cv2.contourArea)  # 面积
         (color_x,color_y),color_radius=cv2.minEnclosingCircle(cnt)  #  最小外接圆
         if color_radius > 3:
