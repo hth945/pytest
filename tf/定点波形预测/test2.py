@@ -51,16 +51,16 @@ class NpDataset(object):
         else:
             raise StopIteration
 
-train_dateset = NpDataset('train')
-for i, (src, lable) in enumerate(train_dateset):
-    # print(src[2])
-    # print(lable[2])
-    x = np.arange(0,25)
-    plt.plot(x,src[2])
-    plt.plot(x,lable[2])
-    plt.show()
-    if i > 30:
-        break
+# train_dateset = NpDataset('train')
+# for i, (src, lable) in enumerate(train_dateset):
+#     # print(src[2])
+#     # print(lable[2])
+#     x = np.arange(0,25)
+#     plt.plot(x,src[2])
+#     plt.plot(x,lable[2])
+#     plt.show()
+#     if i > 30:
+#         break
 
 
 #%%

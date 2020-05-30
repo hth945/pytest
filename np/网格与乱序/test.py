@@ -7,7 +7,12 @@ print(grid)
 
 
 # %%
-x
+x = np.array([0, 1, 2])
+y = np.array([0, 1])
+
+X, Y = np.meshgrid(x, y)
+print(X)
+print(Y)
 
 # %%
 np.mgrid[1:3:1]
