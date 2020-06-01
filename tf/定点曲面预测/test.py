@@ -23,7 +23,6 @@ class NpDataset(object):
 
         x,y = np.mgrid[0:1:0.01,0:1:0.01]
         self.xData = np.c_[x.ravel(), y.ravel()]
-        # self.yData = np.matmul(self.annotations[:,0:1],self.xData[np.newaxis,:])  + self.annotations[:,1:]
         self.yData = np.zeros([self.annotations.shape[0], 100,100])
         for i in range(self.annotations.shape[0]):
             for j in range(100):
