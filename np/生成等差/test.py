@@ -7,3 +7,11 @@ a
 # %%
 a = np.linspace(0,1,28)
 a
+
+# %%
+tem = np.linspace(0, 1, 10)
+
+# %%
+tem
+
+# %%

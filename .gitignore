@@ -3,3 +3,7 @@
 __pycache__
 *.h5
 data
+*.zip
+*.jpg
+*.json
+*.png
