@@ -53,3 +53,14 @@ import  os
 print(os.getcwd()) #获取当前工作目录路径
 
 # %%
+j = 0
+for i,d in enumerate(data):
+    for a in d['annotations']:
+        if a["category_id"] == 5:
+            print(d)
+            j += 1
+            break
+    if j > 3:
+        break
+
+#%%
