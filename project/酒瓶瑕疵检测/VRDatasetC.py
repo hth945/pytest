@@ -124,8 +124,9 @@ class NpDataset(object):
             masks[boxs[i, 1]:boxs[i, 3], boxs[i, 2]:boxs[i, 4]] = 255
         # print(batchImg.shape)
         # print(img.shape)
-        batchImg[:492,:,:] = img[:,:656]
-        batchLable[:492,:] = masks[:,:656]
+        # [492,658] # 512, 640
+        batchImg[:img.shape[0],:,:] = img[:,:640]
+        batchLable[:img.shape[0],:] = masks[:,:640]
 
 
 if __name__ == '__main2__':

@@ -17,7 +17,7 @@ __C.TRAIN.NEGATIVE_SAMPLE     = 'train.tfrecords'
 __C.TRAIN.BATCH_SIZE          = 8
 __C.TRAIN.BATCH_NUMS          = 4000
 # __C.TRAIN.INPUT_SIZE            = [320, 352, 384, 416, 448, 480, 512, 544, 576, 608]
-__C.TRAIN.INPUT_SIZE          = [496,656] # 256 #[492,658]
+__C.TRAIN.INPUT_SIZE          = [512, 640]# [496,656] # 256 #[492,658]
 __C.TRAIN.DATA_AUG            = True
 __C.TRAIN.LR_INIT             = 1e-3
 __C.TRAIN.LR_END              = 1e-6
@@ -32,6 +32,6 @@ __C.TEST                      = edict()
 
 __C.TEST.ANNOT_PATH           = 'datalab2'
 __C.TEST.BATCH_SIZE           = 4
-__C.TEST.INPUT_SIZE           = [496,656] # [492,658]
+__C.TEST.INPUT_SIZE           = [512, 640] #[496,656] # [492,658]
 __C.TEST.DATA_AUG             = False
 

@@ -1,9 +1,14 @@
 .vscode
 .idea
 __pycache__
+variables
+logs
+weights
 *.h5
 data
 *.zip
 *.jpg
 *.json
 *.png
+*.pb
+*.weights

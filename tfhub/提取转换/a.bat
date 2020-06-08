@@ -1,0 +1,1 @@
+conda activate tf2&python test2.py
