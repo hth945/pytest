@@ -1,0 +1,4 @@
+<si300_interface>
+    <result>invalid</result>
+    <error_message>(SITI-00002)Miss a required parameter : USER_ID</error_message>
+</si300_interface>

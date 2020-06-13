@@ -1,0 +1,9 @@
+<?xml version=\"1.0\" encoding=\"UTF - 8\"?>
+<trx>
+    <message_id>ictest_result_report</message_id>
+    <type_id>O</type_id>
+    <log_id>0SA0A43L1G0JM</log_id>
+    <rtn_code>9999999</rtn_code>
+    <rtn_msg>Unparseable date: \"\"</rtn_msg>
+    <rtn_code_msg>Unparseable date: \"\"</rtn_code_msg>
+</trx>
