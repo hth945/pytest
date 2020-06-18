@@ -41,7 +41,7 @@ test_count = len(test_image_path)
 import tensorflow_hub as hub
 resnet50 = tf.saved_model.load('../../dataAndModel/model/bit_m-r50x1_1')
 inputs = tf.keras.Input(shape=(224, 224,3))
-x = resnet50(inputs)
+x = resnet50(inputs)  # 错误
 x = tf.keras.layers.Dense(512, activation='relu')(x)
 x = tf.keras.layers.Dense(1, activation='sigmoid')(x)
 model = tf.keras.Model(inputs, x)

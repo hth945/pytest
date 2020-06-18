@@ -12,3 +12,4 @@ data
 *.png
 *.pb
 *.weights
+*.bmp
