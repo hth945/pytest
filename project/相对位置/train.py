@@ -8,13 +8,26 @@ import mynet
 from VRDatasetC import NpDataset
 import tensorflow_hub as hub
 
-
+##############可以看形状,不能控制不训练######################
+# scal = cfg.TRAIN.INPUT_SIZE
+# xception = tf.keras.applications.Xception(weights='imagenet',
+#                                           include_top=False,
+#                                           input_shape=(scal, scal, 3))
+# xception.trianable = False
+# x = tf.keras.layers.GlobalAveragePooling2D()(xception.output)
+# x = tf.keras.layers.Dense(2048, activation='relu')(x)
+# x = tf.keras.layers.Dense(256, activation='relu')(x)
+# out = tf.keras.layers.Dense(3)(x)
+# model = tf.keras.models.Model(inputs=xception.input, outputs=out)
+#
+# model.summary()
+# exit()
+##############my######################
 scal = cfg.TRAIN.INPUT_SIZE
 xception = tf.keras.applications.Xception(weights='imagenet',
                                           include_top=False,
                                           input_shape=(scal, scal, 3))
-xception.trianable = False
-
+xception.trainable = False
 inputs = tf.keras.layers.Input(shape=(scal, scal, 3))
 x = xception(inputs)
 x = tf.keras.layers.GlobalAveragePooling2D()(x)

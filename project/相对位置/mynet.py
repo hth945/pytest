@@ -4,6 +4,7 @@ import shutil
 import numpy as np
 import tensorflow as tf
 from config import cfg
+from tensorflow.python.framework.convert_to_constants import convert_variables_to_constants_v2
 
 def Pyramid(input,filters=4):
 

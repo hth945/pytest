@@ -102,7 +102,7 @@ class NpDataset(object):
         lab[9:12][lab[6:9] > 0] = 1
 
 
-if __name__ == '__main1__':
+if __name__ == '__main__':
     train_dateset = NpDataset('train')
     for imgs, lables in train_dateset:
         # print(lables[3])
@@ -113,7 +113,7 @@ if __name__ == '__main1__':
         print(lables[3])
         cv2.waitKey(0)
 
-if __name__ == '__main__':
+if __name__ == '__main1__':
     import tensorflow as tf
     import tensorflow_hub as hub
     modelTest = tf.keras.models.load_model('oldModel3.h5',custom_objects={'KerasLayer':hub.KerasLayer})
