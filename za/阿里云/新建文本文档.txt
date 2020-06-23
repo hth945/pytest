@@ -1,0 +1,4 @@
+git clone 
+conda install -c conda-forge jupyterlab 
+opencv-python
+easydict
