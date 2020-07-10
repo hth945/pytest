@@ -109,3 +109,5 @@ files = glob.glob('data/val/image/*.png')
 for x in files:
     visualize_result(x, model)
 plt.show()
+
+# %%

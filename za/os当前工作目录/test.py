@@ -5,5 +5,7 @@ os.getcwd()
 os.chdir('d:\\aa')
 os.getcwd()
 
+print(os.listdir("D:\Python\src"))
+
 
 
