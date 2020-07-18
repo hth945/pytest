@@ -47,26 +47,31 @@ plt.show()
 
 #%%
 Ax
-i = 0.0
+i = 1.0
+n = 0
 lT = 0
 a = []
-while i < Ax:
+lT = int(np.sqrt(2*0/Acceleration)*1000000)
+while i < Ax+1:
     T = int(np.sqrt(2*i/Acceleration)*1000000)
-    print(T - lT)
+    # print(T - lT)
     a.append(T - lT)
     lT = T
     i += 1
+    n += 1
 i = 0.0
 vTem = int(1000000/speed)
 while i < Ux:
     a.append(vTem)
     i += 1
-i = 0.0
-T = vTem
-while i < Dx:
+    n += 1
+lT = int(np.sqrt(2*(Dx)/Deceleration)*1000000)
+i = 1.0
+while i < Dx+1:
     T = int(np.sqrt(2*(Dx-i)/Deceleration)*1000000)
-    print(lT - T)
-    a.append(T - lT)
+    # print(lT - T)
+    a.append(lT - T)
+    n += 1
     lT = T
     i += 1
 
@@ -76,5 +81,14 @@ plt.show()
 
 # %%
 int(1000000/speed)
+
+# %%
+n
+
+# %%
+a[0] /1000000.0
+
+# %%
+len(a)
 
 # %%
