@@ -13,3 +13,4 @@ data
 *.pb
 *.weights
 *.bmp
+*.pth
