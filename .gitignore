@@ -4,6 +4,7 @@ __pycache__
 variables
 logs
 weights
+build
 *.h5
 data
 *.zip

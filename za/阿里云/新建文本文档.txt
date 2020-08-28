@@ -4,3 +4,9 @@ conda install -c conda-forge jupyterlab
 
 opencv-python
 easydict
+
+fdisk -l
+
+df -h
+
+mount /dev/vdb1  HthDisk3
