@@ -26,3 +26,13 @@ a2=np.lexsort(a.T[:2,:])
 print(a[a2,:])
 
 # %%
+import numpy as np
+
+a = np.array([1,2,3,2])
+# %%
+a
+# %%
+np.argsort(a)
+# %%
+a[::-1]
+# %%
