@@ -71,13 +71,15 @@ def runClick(templatePath,minRange=0.02,lastTemplatePath=None,lastTemplateMinRan
         #     raise Exception("templatePath :", templatePath)
 
 i = 0
-while i < 5:
+while i < 100:
     i+=1
-    runClick('startL.png',lastTemplatePath='end.png', lastTemplateMinRange=0.05)
-    runClick('start2.png')
-    runClick('end.png',minRange=0.05)
+    print('1')
+    runClick('startXL.png',lastTemplatePath='endX.png', lastTemplateMinRange=0.05)
+    print('2')
+    runClick('startX2.png')
+    print('3')
+    runClick('endX.png',minRange=0.05)
 
 # img = get_screenshot()
 # cv2.imshow('imgTem', img)
 cv2.waitKey(0)
-
