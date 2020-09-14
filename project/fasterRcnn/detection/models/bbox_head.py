@@ -152,6 +152,8 @@ class BBoxHead(tf.keras.Model):
         
         # Filter out background boxes
         keep = tf.where(class_ids > 0)[:, 0]
+        # if tf.shape(keep) == 0:
+        #     return None
         
         # Filter out low confidence boxes
         if self.min_confidence:

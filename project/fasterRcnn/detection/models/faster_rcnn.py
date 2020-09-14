@@ -107,8 +107,13 @@ class FasterRCNN(tf.keras.Model):
         ###################roi pooling###################
         if training: # get target value for these proposal target label and target delta
             rois_list, rcnn_target_matchs_list, rcnn_target_deltas_list =self.bbox_target.build_targets(proposals_list, gt_boxes, gt_class_ids, img_metas)
+            # proposal中选出来的框,再根据标签中的数据计算iou,获得iou超过多少的正标签,和小于多少的负标签
+            # rois_list选出来的roi(归一化了).
+            # rcnn_target_matchs_list 选出来的框的标签, 0为背景
+            # rcnn_target_deltas_list 选出来的框的偏移偏差(归一化了)(正标签有效)
 
-            print(tf.shape(rcnn_target_matchs_list), tf.shape(rcnn_target_deltas_list))
+            # positive_roi_ix = tf.where(rcnn_target_matchs_list[0] > 0)
+            # print('1  ',tf.shape(positive_roi_ix),tf.shape(rcnn_target_matchs_list), tf.shape(rcnn_target_deltas_list))
 
         else:
             rois_list = proposals_list
@@ -125,9 +130,10 @@ class FasterRCNN(tf.keras.Model):
 
             rcnn_class_loss, rcnn_bbox_loss = self.bbox_head.loss(rcnn_class_logits_list, rcnn_deltas_list, rcnn_target_matchs_list, rcnn_target_deltas_list)
 
-            return [rpn_class_loss, rpn_bbox_loss,
-                    rcnn_class_loss, rcnn_bbox_loss]
+            # return [rpn_class_loss, rpn_bbox_loss,rcnn_class_loss, rcnn_bbox_loss],rois_list, rcnn_target_matchs_list, rcnn_target_deltas_list
+            return [rpn_class_loss, rpn_bbox_loss, rcnn_class_loss,rcnn_bbox_loss]
         else:
+            # print(rcnn_probs_list)
             detections_list = self.bbox_head.get_bboxes(rcnn_probs_list, rcnn_deltas_list, rois_list, img_metas)
             return detections_list
 

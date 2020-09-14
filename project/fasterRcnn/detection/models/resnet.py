@@ -200,7 +200,7 @@ class ResNet(tf.keras.Model):
 
 #%%
 if __name__ == '__main__':
-    random_float = tf.random.uniform(shape=(1, 800, 800, 3))
+    random_float = tf.random.uniform(shape=(1, 768, 768, 3))
     backbone = ResNet(depth=50, name='res_net')
 
     C2, C3, C4, C5 = backbone(random_float)
@@ -208,5 +208,6 @@ if __name__ == '__main__':
     print(C3.shape)
     print(C4.shape)
     print(C5.shape)
+    print(backbone.compute_output_shape((1, 768, 768, 3)))
 
 # %%

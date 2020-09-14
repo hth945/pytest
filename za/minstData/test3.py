@@ -56,9 +56,9 @@ def make_image(data, image_path, ratio=1):
 rootPath = '..\..\dataAndModel\data\mnist\\'
 image_paths = [rootPath + 'train\\' + file  for file in os.listdir(rootPath + 'train') ]
 
-SIZE =416
+SIZE =768
 image_sizes = [3, 6, 3]
-images_num = 100
+images_num = 1000
 with open(rootPath + 'objtrainlab.txt', "w") as wf:
     image_num = 0
     while image_num < images_num:
@@ -70,7 +70,7 @@ with open(rootPath + 'objtrainlab.txt', "w") as wf:
         bboxes_num = 0
 
         # ratios small, medium, big objects
-        ratios = [[0.5, 0.8], [1., 1.5, 2.], [3., 4.]]
+        ratios = [[0.9, 1.2], [2., 3, 4], [7., 9]]
         for i in range(len(ratios)):
             N = random.randint(0, image_sizes[i])
             if N !=0: bboxes_num += 1
