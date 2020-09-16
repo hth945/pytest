@@ -95,22 +95,22 @@ class ResNet(tf.keras.Model):
         
         self.res2a = _Bottleneck([64, 64, 256], block='2a',
                                  downsampling=True, stride=1)
-        self.res2b = _Bottleneck([64, 64, 256], block='2b')
+        # self.res2b = _Bottleneck([64, 64, 256], block='2b')
         self.res2c = _Bottleneck([64, 64, 256], block='2c')
         
         self.res3a = _Bottleneck([128, 128, 512], block='3a', 
                                  downsampling=True, stride=2)
-        self.res3b = _Bottleneck([128, 128, 512], block='3b')
-        self.res3c = _Bottleneck([128, 128, 512], block='3c')
+        # self.res3b = _Bottleneck([128, 128, 512], block='3b')
+        # self.res3c = _Bottleneck([128, 128, 512], block='3c')
         self.res3d = _Bottleneck([128, 128, 512], block='3d')
         
         self.res4a = _Bottleneck([256, 256, 1024], block='4a', 
                                  downsampling=True, stride=2)
         self.res4b = _Bottleneck([256, 256, 1024], block='4b')
-        self.res4c = _Bottleneck([256, 256, 1024], block='4c')
-        self.res4d = _Bottleneck([256, 256, 1024], block='4d')
-        self.res4e = _Bottleneck([256, 256, 1024], block='4e')
-        self.res4f = _Bottleneck([256, 256, 1024], block='4f')
+        # self.res4c = _Bottleneck([256, 256, 1024], block='4c')
+        # self.res4d = _Bottleneck([256, 256, 1024], block='4d')
+        # self.res4e = _Bottleneck([256, 256, 1024], block='4e')
+        # self.res4f = _Bottleneck([256, 256, 1024], block='4f')
         if self.depth == 101:
             self.res4g = _Bottleneck([256, 256, 1024], block='4g')
             self.res4h = _Bottleneck([256, 256, 1024], block='4h')

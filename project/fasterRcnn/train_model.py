@@ -20,13 +20,13 @@ train_dataset = myDataset.myDataSet(flip_ratio=0.5,scale=(768, 768))
 num_classes = len(train_dataset.get_categories())
 train_generator = data_generator.DataGenerator(train_dataset)
 train_tf_dataset = tf.data.Dataset.from_generator(train_generator, (tf.float32, tf.float32, tf.float32, tf.int32))
-train_tf_dataset = train_tf_dataset.batch(2).prefetch(100).shuffle(100)
+train_tf_dataset = train_tf_dataset.batch(1).prefetch(100).shuffle(100)
 # train_tf_dataset = train_tf_dataset.batch(3)
 
 # %%
 model = faster_rcnn.FasterRCNN(num_classes=num_classes)
 
-optimizer = keras.optimizers.SGD(1e-3, momentum=0.9, nesterov=True)
+optimizer = keras.optimizers.SGD(1e-4, momentum=0.9, nesterov=True)
 
 for (batch, inputs) in enumerate(train_tf_dataset):
     batch_imgs, batch_metas, batch_bboxes, batch_labels = inputs
@@ -38,7 +38,24 @@ for (batch, inputs) in enumerate(train_tf_dataset):
     print('runMOdel')
     _ = model((batch_imgs, batch_metas), training=False)
     model.load_weights('weights/faster_rcnn.h5', by_name=True)
+    _ = model((batch_imgs, batch_metas), training=False)
     break
+for (batch, inputs) in enumerate(train_tf_dataset):
+    batch_imgs, batch_metas, batch_bboxes, batch_labels = inputs
+    rois_list= model((batch_imgs, batch_metas), training=False)
+    print(rois_list)
+    image = batch_imgs[0].numpy()
+    bboxs = rois_list[0].numpy()
+    for i in range(bboxs.shape[0]):
+        if bboxs[i][4] < 0.9:
+            continue
+        bbox = bboxs[i]*1216
+        image = cv2.rectangle(image, (int(float(bbox[0])),
+                                      int(float(bbox[1]))),
+                                      (int(float(bbox[2])),
+                                       int(float(bbox[3]))), (255, 0, 0), 2)
+    cv2.imshow('img', image)
+    cv2.waitKey(0)
 
 # for (batch, inputs) in enumerate(train_tf_dataset):
 #     batch_imgs, batch_metas, batch_bboxes, batch_labels = inputs
@@ -69,7 +86,7 @@ for epoch in range(100):
     for (batch, inputs) in enumerate(train_tf_dataset):
         batch_imgs, batch_metas, batch_bboxes, batch_labels = inputs
         with tf.GradientTape() as tape:
-            rpn_class_loss, rpn_bbox_loss, rcnn_class_loss, rcnn_bbox_loss = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True)
+            rpn_class_loss, rpn_bbox_loss = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True) # , rcnn_class_loss, rcnn_bbox_loss
 
             loss_value = rpn_class_loss + rpn_bbox_loss # + rcnn_class_loss + rcnn_bbox_loss
 
@@ -79,7 +96,7 @@ for epoch in range(100):
         loss_history.append(loss_value.numpy())
 
         if batch % 100 == 0:
-            print(rpn_class_loss, rpn_bbox_loss, rcnn_class_loss, rcnn_bbox_loss )
+            print(rpn_class_loss, rpn_bbox_loss) # , rcnn_class_loss, rcnn_bbox_loss
             print('epoch', epoch, batch, np.mean(loss_history))
             model.save_weights('weights/faster_rcnn.h5')
 

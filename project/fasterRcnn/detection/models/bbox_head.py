@@ -187,6 +187,8 @@ class BBoxHead(tf.keras.Model):
         nms_keep = []
         for i in range(unique_pre_nms_class_ids.shape[0]):
             nms_keep.append(nms_keep_map(unique_pre_nms_class_ids[i]))
+        if len(nms_keep)==0:
+            return None
         nms_keep = tf.concat(nms_keep, axis=0)
         
         # 3. Compute intersection between keep and nms_keep

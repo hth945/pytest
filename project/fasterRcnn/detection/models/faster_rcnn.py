@@ -118,6 +118,17 @@ class FasterRCNN(tf.keras.Model):
         else:
             rois_list = proposals_list
 
+
+        ####################self RPN########################
+        # if training:
+        #     rpn_class_loss, rpn_bbox_loss = self.rpn_head.loss(rpn_class_logits, rpn_deltas, gt_boxes, gt_class_ids, img_metas)
+        #     return [rpn_class_loss, rpn_bbox_loss]
+        # else:
+        #     proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas, with_probs=True)
+        #     return proposals_list
+
+
+
         # rois_list only contains coordinates, rcnn_feature_maps save the 5 features data=>[192,7,7,256] # [2000,7,7,256]
         pooled_regions_list = self.roi_align((rois_list, rcnn_feature_maps, img_metas), training=training)
 
@@ -134,6 +145,10 @@ class FasterRCNN(tf.keras.Model):
             return [rpn_class_loss, rpn_bbox_loss, rcnn_class_loss,rcnn_bbox_loss]
         else:
             # print(rcnn_probs_list)
+            # proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas,with_probs=True)
+            #
+            # return proposals_list
+
             detections_list = self.bbox_head.get_bboxes(rcnn_probs_list, rcnn_deltas_list, rois_list, img_metas)
             return detections_list
 

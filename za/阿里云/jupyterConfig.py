@@ -12,3 +12,4 @@ c.NotebookApp.notebook_dir = '/'
 
 conda activate tensorflow_2.1_cu10.1_py36
 nohup  jupyter lab > /dev/null 2>&1 &
+nohup  python train.py  > /dev/null 2>&1 &
