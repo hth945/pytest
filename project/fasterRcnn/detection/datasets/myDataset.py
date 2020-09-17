@@ -36,8 +36,8 @@ class myDataSet(object):
                 if len(line)-1 > max_boxes:
                     max_boxes  = len(line)-1
 
-        self.boxes = np.zeros([len(self.imgs), max_boxes, 4])
-        self.lables = np.zeros([len(self.imgs), max_boxes])
+        self.boxes = np.zeros([len(self.imgs), max_boxes, 4],dtype=np.int)
+        self.lables = np.zeros([len(self.imgs), max_boxes],dtype=np.int)
         with open(label_txt) as f:
             index = 0
             while True:
@@ -94,7 +94,7 @@ class myDataSet(object):
         box = self.boxes[idx]
         lable = self.lables[idx]
 
-        img = cv2.imread(imgPath, cv2.IMREAD_COLOR)
+        img = cv2.imread(imgPath, cv2.IMREAD_COLOR).astype(np.float32)
         ori_shape = img.shape
 
         # flip = True if np.random.rand() < self.flip_ratio else False

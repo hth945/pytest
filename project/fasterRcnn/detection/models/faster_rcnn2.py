@@ -21,7 +21,7 @@ class FasterRCNN(tf.keras.Model):
         # RPN training configuration
         self.PRN_BATCH_SIZE = 256
         self.RPN_POS_FRAC = 0.5
-        self.RPN_POS_IOU_THR = 0.7
+        self.RPN_POS_IOU_THR = 0.55 # 0.7
         self.RPN_NEG_IOU_THR = 0.3
 
         # ROIs kept configuration
@@ -112,8 +112,10 @@ class FasterRCNN(tf.keras.Model):
             rpn_class_loss, rpn_bbox_loss = self.rpn_head.loss(rpn_class_logits, rpn_deltas, gt_boxes, gt_class_ids, img_metas)
             return [rpn_class_loss, rpn_bbox_loss]
         else:
-            proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas, with_probs=True)
-            return proposals_list
+
+            return rpn_class_logits, rpn_probs
+            # proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas, with_probs=True)
+            # return proposals_list
 
 
         # ###################roi pooling###################
