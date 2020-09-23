@@ -66,29 +66,29 @@ class FasterRCNN(tf.keras.Model):
             neg_iou_thr=self.RPN_NEG_IOU_THR,
             name='rpn_head')
 
-        # self.roi_align = roi_align.PyramidROIAlign(pool_shape=self.POOL_SIZE, name='pyramid_roi_align')
-        #
-        # self.bbox_head = bbox_head.BBoxHead(
-        #     num_classes=self.NUM_CLASSES,
-        #     pool_size=self.POOL_SIZE,
-        #     target_means=self.RCNN_TARGET_MEANS,
-        #     target_stds=self.RCNN_TARGET_STDS,
-        #     min_confidence=self.RCNN_MIN_CONFIDENCE,
-        #     nms_threshold=self.RCNN_NME_THRESHOLD,
-        #     max_instances=self.RCNN_MAX_INSTANCES,
-        #     name='b_box_head')
-        #
-        # # Target Generator for the second stage.
-        # self.bbox_target = bbox_target.ProposalTarget(
-        #     target_means=self.RCNN_TARGET_MEANS,
-        #     target_stds=self.RPN_TARGET_STDS,
-        #     num_rcnn_deltas=self.RCNN_BATCH_SIZE,
-        #     positive_fraction=self.RCNN_POS_FRAC,
-        #     pos_iou_thr=self.RCNN_POS_IOU_THR,
-        #     neg_iou_thr=self.RCNN_NEG_IOU_THR)
+        self.roi_align = roi_align.PyramidROIAlign(pool_shape=self.POOL_SIZE, name='pyramid_roi_align')
+
+        self.bbox_head = bbox_head.BBoxHead(
+            num_classes=self.NUM_CLASSES,
+            pool_size=self.POOL_SIZE,
+            target_means=self.RCNN_TARGET_MEANS,
+            target_stds=self.RCNN_TARGET_STDS,
+            min_confidence=self.RCNN_MIN_CONFIDENCE,
+            nms_threshold=self.RCNN_NME_THRESHOLD,
+            max_instances=self.RCNN_MAX_INSTANCES,
+            name='b_box_head')
+
+        # Target Generator for the second stage.
+        self.bbox_target = bbox_target.ProposalTarget(
+            target_means=self.RCNN_TARGET_MEANS,
+            target_stds=self.RPN_TARGET_STDS,
+            num_rcnn_deltas=self.RCNN_BATCH_SIZE,
+            positive_fraction=self.RCNN_POS_FRAC,
+            pos_iou_thr=self.RCNN_POS_IOU_THR,
+            neg_iou_thr=self.RCNN_NEG_IOU_THR)
 
 
-    def call(self, inputs, training=True):
+    def call(self, inputs, training=True,rec=0):
 
         ###################back one###################
         if training: # training
@@ -107,57 +107,66 @@ class FasterRCNN(tf.keras.Model):
 
 
 
-        ####################self RPN########################
+        # ####################self RPN########################
+        # if training:
+        #     pass
+        #     # rpn_class_loss, rpn_bbox_loss = self.rpn_head.loss(rpn_class_logits, rpn_deltas, gt_boxes, gt_class_ids, img_metas)
+        #     # return [rpn_class_loss, rpn_bbox_loss]
+        # else:
+        #
+        #     return rpn_class_logits, rpn_probs
+        #     # proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas, with_probs=True)
+        #     # return proposals_list
+
+
+        ###################roi pooling###################
+        proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas)
+        if training: # get target value for these proposal target label and target delta
+            rois_list, rcnn_target_matchs_list, rcnn_target_deltas_list =self.bbox_target.build_targets(proposals_list, gt_boxes, gt_class_ids, img_metas)
+            # proposal中选出来的框,再根据标签中的数据计算iou,获得iou超过多少的正标签,和小于多少的负标签
+            # rois_list选出来的roi(归一化了).
+            # rcnn_target_matchs_list 选出来的框的标签, 0为背景
+            # rcnn_target_deltas_list 选出来的框的偏移偏差(归一化了)(正标签有效)
+
+            # positive_roi_ix = tf.where(rcnn_target_matchs_list[0] > 0)
+            # print('1  ',tf.shape(positive_roi_ix),tf.shape(rcnn_target_matchs_list), tf.shape(rcnn_target_deltas_list))
+
+        else:
+            rois_list = proposals_list
+
+        # rois_list only contains coordinates, rcnn_feature_maps save the 5 features data=>[192,7,7,256] # [2000,7,7,256]
+        pooled_regions_list = self.roi_align((rois_list, rcnn_feature_maps, img_metas), training=training)
+
+        ################### class ###################
+        # [192, 81], [192, 81], [192, 81, 4]
+        rcnn_class_logits_list, rcnn_probs_list, rcnn_deltas_list = self.bbox_head(pooled_regions_list, training=training)
+        # print('pooled_regions_list', pooled_regions_list)
+        print('rcnn_probs_list', rcnn_probs_list)
+        print('rcnn_class_logits_list', rcnn_class_logits_list)
         if training:
             rpn_class_loss, rpn_bbox_loss = self.rpn_head.loss(rpn_class_logits, rpn_deltas, gt_boxes, gt_class_ids, img_metas)
-            return [rpn_class_loss, rpn_bbox_loss]
-        else:
 
-            return rpn_class_logits, rpn_probs
-            # proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas, with_probs=True)
+            rcnn_class_loss, rcnn_bbox_loss = self.bbox_head.loss(rcnn_class_logits_list, rcnn_deltas_list, rcnn_target_matchs_list, rcnn_target_deltas_list)
+
+            if rec == 0:
+                return [rpn_class_loss, rpn_bbox_loss, rcnn_class_loss, rcnn_bbox_loss]
+            elif rec == 1:
+               return [rpn_class_loss, rpn_bbox_loss,rcnn_class_loss, rcnn_bbox_loss],rois_list, rcnn_target_matchs_list, rcnn_target_deltas_list
+            elif rec == 2:
+                detections_list = self.bbox_head.get_bboxes(rcnn_probs_list, rcnn_deltas_list, rois_list, img_metas)
+
+                rcnn_class_logits_list, rcnn_probs_list, rcnn_deltas_list = self.bbox_head(pooled_regions_list,
+                                                                                           training=False)
+                detections_list2 = self.bbox_head.get_bboxes(rcnn_probs_list, rcnn_deltas_list, rois_list, img_metas)
+                return detections_list,detections_list2
+        else:
+            # print(rcnn_probs_list)
+            # proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas,with_probs=True)
+            #
             # return proposals_list
 
-
-        # ###################roi pooling###################
-        # proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas)
-        # if training: # get target value for these proposal target label and target delta
-        #     rois_list, rcnn_target_matchs_list, rcnn_target_deltas_list =self.bbox_target.build_targets(proposals_list, gt_boxes, gt_class_ids, img_metas)
-        #     # proposal中选出来的框,再根据标签中的数据计算iou,获得iou超过多少的正标签,和小于多少的负标签
-        #     # rois_list选出来的roi(归一化了).
-        #     # rcnn_target_matchs_list 选出来的框的标签, 0为背景
-        #     # rcnn_target_deltas_list 选出来的框的偏移偏差(归一化了)(正标签有效)
-        #
-        #     # positive_roi_ix = tf.where(rcnn_target_matchs_list[0] > 0)
-        #     # print('1  ',tf.shape(positive_roi_ix),tf.shape(rcnn_target_matchs_list), tf.shape(rcnn_target_deltas_list))
-        #
-        # else:
-        #     rois_list = proposals_list
-        #
-        #
-        #
-        #
-        # # rois_list only contains coordinates, rcnn_feature_maps save the 5 features data=>[192,7,7,256] # [2000,7,7,256]
-        # pooled_regions_list = self.roi_align((rois_list, rcnn_feature_maps, img_metas), training=training)
-        #
-        # ################### class ###################
-        # # [192, 81], [192, 81], [192, 81, 4]
-        # rcnn_class_logits_list, rcnn_probs_list, rcnn_deltas_list = self.bbox_head(pooled_regions_list, training=training)
-        #
-        # if training:
-        #     rpn_class_loss, rpn_bbox_loss = self.rpn_head.loss(rpn_class_logits, rpn_deltas, gt_boxes, gt_class_ids, img_metas)
-        #
-        #     rcnn_class_loss, rcnn_bbox_loss = self.bbox_head.loss(rcnn_class_logits_list, rcnn_deltas_list, rcnn_target_matchs_list, rcnn_target_deltas_list)
-        #
-        #     # return [rpn_class_loss, rpn_bbox_loss,rcnn_class_loss, rcnn_bbox_loss],rois_list, rcnn_target_matchs_list, rcnn_target_deltas_list
-        #     return [rpn_class_loss, rpn_bbox_loss, rcnn_class_loss,rcnn_bbox_loss]
-        # else:
-        #     # print(rcnn_probs_list)
-        #     # proposals_list = self.rpn_head.get_proposals(rpn_probs, rpn_deltas, img_metas,with_probs=True)
-        #     #
-        #     # return proposals_list
-        #
-        #     detections_list = self.bbox_head.get_bboxes(rcnn_probs_list, rcnn_deltas_list, rois_list, img_metas)
-        #     return detections_list
+            detections_list = self.bbox_head.get_bboxes(rcnn_probs_list, rcnn_deltas_list, rois_list, img_metas)
+            return detections_list
 
         return 0
 

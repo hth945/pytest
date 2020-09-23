@@ -15,8 +15,6 @@ from    detection.models import faster_rcnn2
 import  tensorflow as tf
 from    tensorflow import keras
 
-
-
 tf.random.set_seed(22)
 np.random.seed(22)
 
@@ -36,74 +34,106 @@ model = faster_rcnn2.FasterRCNN(num_classes=num_classes)
 optimizer = keras.optimizers.Adam(0.0001)
 print([var.name for var in model.trainable_variables])
 
-img, img_meta, bboxes, labels = train_dataset[6]
-batch_imgs = tf.convert_to_tensor(np.expand_dims(img.astype(np.float32), 0))
-batch_metas = tf.convert_to_tensor(np.expand_dims(img_meta.astype(np.float32), 0))
-batch_bboxes = tf.convert_to_tensor(np.expand_dims(bboxes.astype(np.float32), 0))
-batch_labels = tf.convert_to_tensor(np.expand_dims(labels.astype(np.int), 0))
-#%%
-rpn_class_loss, rpn_bbox_loss = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True)
-# model.load_weights('weights/faster_rcnn.h5', by_name=True)
-#%%
+#####################all Test################################
+for i in range(20):
+    img, img_meta, bboxes, labels = train_dataset[i]
+    batch_imgs = tf.convert_to_tensor(np.expand_dims(img.astype(np.float32), 0))
+    batch_metas = tf.convert_to_tensor(np.expand_dims(img_meta.astype(np.float32), 0))
+    batch_bboxes = tf.convert_to_tensor(np.expand_dims(bboxes.astype(np.float32), 0))
+    batch_labels = tf.convert_to_tensor(np.expand_dims(labels.astype(np.int), 0))
+    #%%
+    if i == 0:
+        _ = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True)
+        model.load_weights('weights/faster_rcnn0_4.h5', by_name=True)
+        _ = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True)
+        # tf.keras.utils.plot_model(model.rpn_head, show_shapes=True, show_layer_names=True)
+    #%%
+    ########################test#################################
+    # rois_list = model((batch_imgs, batch_metas),training=False)
+    rois_list,rois_list2 = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True,rec=2)
 
-# rpn_class_logits, rpn_probs = model((batch_imgs, batch_metas),training=False)
+    import imgTest
+
+    print(rois_list)
+    image = batch_imgs[0].numpy()
+    bboxs = rois_list[0].numpy()
+    for i in range(bboxs.shape[0]):
+        # if bboxs[i][4] < 0.9:
+        #     continue
+        bbox = bboxs[i]
+        image = cv2.rectangle(image, (int(float(bbox[0])),
+                                      int(float(bbox[1]))),
+                              (int(float(bbox[2])),
+                               int(float(bbox[3]))), (255, 0, 0), 2)
+    cv2.imshow('img', image)
+    img2 = imgTest.showLabRpn(batch_imgs, batch_metas, batch_bboxes, None)
+    cv2.imshow('img2', img2)
+
+    print(rois_list2)
+    image = batch_imgs[0].numpy()
+    bboxs = rois_list2[0].numpy()
+    for i in range(bboxs.shape[0]):
+        # if bboxs[i][4] < 0.9:
+        #     continue
+        bbox = bboxs[i]
+        image = cv2.rectangle(image, (int(float(bbox[0])),
+                                      int(float(bbox[1]))),
+                              (int(float(bbox[2])),
+                               int(float(bbox[3]))), (255, 0, 0), 2)
+    cv2.imshow('img3', image)
+
+
+    cv2.waitKey(0)
+
+# #####################RPN Test################################
+# for i in range(20):
+#     img, img_meta, bboxes, labels = train_dataset[i]
+#     batch_imgs = tf.convert_to_tensor(np.expand_dims(img.astype(np.float32), 0))
+#     batch_metas = tf.convert_to_tensor(np.expand_dims(img_meta.astype(np.float32), 0))
+#     batch_bboxes = tf.convert_to_tensor(np.expand_dims(bboxes.astype(np.float32), 0))
+#     batch_labels = tf.convert_to_tensor(np.expand_dims(labels.astype(np.int), 0))
+#     #%%
+#     if i == 0:
+#         _ = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True)
+#         model.load_weights('weights/faster_rcnn0_4.h5', by_name=True)
 #
-# anchors, valid_flags = model.rpn_head.generator.generate_pyramid_anchors(batch_metas)
+#         # tf.keras.utils.plot_model(model.rpn_head, show_shapes=True, show_layer_names=True)
+#     #%%
+#     ########################test#################################
+#     rpn_class_logits, rpn_probs = model((batch_imgs, batch_metas),training=False)
 #
-# rpn_probs = rpn_probs[0, :, 1]
-# valid_flags = valid_flags[0]
-# print(rpn_probs.shape)
-# print(anchors.shape)
-# print(valid_flags.shape)
-# valid_flags = tf.cast(valid_flags, tf.bool)
-# rpn_probs = tf.boolean_mask(rpn_probs, valid_flags)
-# anchors = tf.boolean_mask(anchors, valid_flags)
-# ix = tf.nn.top_k(rpn_probs, 100, sorted=True).indices
-# rpn_probs = tf.gather(rpn_probs, ix)
-# anchors = tf.gather(anchors, ix)
-# print(rpn_probs)
-# print(anchors)
+#     import imgTest
 #
-# image = batch_imgs[0].numpy()
-# print(image)
-# bboxs = anchors.numpy()
-# for i in range(bboxs.shape[0]):
-#     bbox = bboxs[i]# *768
-#     print(bbox)
-#     image = cv2.rectangle(image, (int(float(bbox[0])),
-#                                   int(float(bbox[1]))),
-#                                   (int(float(bbox[2])),
-#                                    int(float(bbox[3]))), (1.0, 0, 0), 2)
-# cv2.imshow('img', image)
-# cv2.waitKey(0)
-#
-# exit()
-#%%
+#     img1 = imgTest.showRunRpn(batch_imgs, batch_metas,rpn_class_logits, rpn_probs,100)
+#     img2 = imgTest.showLabRpn(batch_imgs, batch_metas,batch_bboxes, None)
+#     cv2.imshow('img1', img1)
+#     cv2.imshow('img2', img2)
+#     cv2.waitKey(0)
+
+########################train#################################
 # for (batch, inputs) in enumerate(train_tf_dataset):
 #     batch_imgs, batch_metas, batch_bboxes, batch_labels = inputs
-#     with tf.GradientTape() as tape:
-#         rpn_class_loss, rpn_bbox_loss = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True)
+#     rpn_class_loss, rpn_bbox_loss, rcnn_class_loss,rcnn_bbox_loss = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True)
+#     model.load_weights('weights/faster_rcnn0_4.h5', by_name=True)
 #     break
-# print([var.name for var in model.trainable_variables])
-
-
-
-for epoch in range(100):
-    loss_history = []
-    for (batch, inputs) in enumerate(train_tf_dataset):
-        batch_imgs, batch_metas, batch_bboxes, batch_labels = inputs
-        with tf.GradientTape() as tape:
-            rpn_class_loss, rpn_bbox_loss = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True) # , rcnn_class_loss, rcnn_bbox_loss
-
-            loss_value = rpn_class_loss  + rpn_bbox_loss*0.1 # + rcnn_class_loss + rcnn_bbox_loss
-
-        grads = tape.gradient(loss_value, model.trainable_variables)
-        optimizer.apply_gradients(zip(grads, model.trainable_variables))
-
-        loss_history.append(loss_value.numpy())
-
-        if batch % 100 == 0:
-            print(rpn_class_loss, rpn_bbox_loss) # , rcnn_class_loss, rcnn_bbox_loss
-            print('epoch', epoch, batch, np.mean(loss_history))
-            model.save_weights('weights/faster_rcnn0_0.h5')
+#
+#
+# for epoch in range(100):
+#     loss_history = []
+#     for (batch, inputs) in enumerate(train_tf_dataset):
+#         batch_imgs, batch_metas, batch_bboxes, batch_labels = inputs
+#         with tf.GradientTape() as tape:
+#             rpn_class_loss, rpn_bbox_loss, rcnn_class_loss,rcnn_bbox_loss = model((batch_imgs, batch_metas, batch_bboxes, batch_labels), training=True) # , rcnn_class_loss, rcnn_bbox_loss
+#
+#             loss_value = rpn_class_loss  + rpn_bbox_loss  + rcnn_class_loss + rcnn_bbox_loss
+#
+#         grads = tape.gradient(loss_value, model.trainable_variables)
+#         optimizer.apply_gradients(zip(grads, model.trainable_variables))
+#
+#         loss_history.append(loss_value.numpy())
+#
+#         if batch % 100 == 0:
+#             print(rpn_class_loss, rpn_bbox_loss, rcnn_class_loss, rcnn_bbox_loss) #
+#             print('epoch', epoch, batch, np.mean(loss_history))
+#             model.save_weights('weights/faster_rcnn0_4.h5')
 

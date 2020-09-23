@@ -30,7 +30,7 @@ def make_image(data, image_path, ratio=1):
     image = cv2.imread(image_path)
     image = cv2.resize(image, (int(28*ratio), int(28*ratio)))
     h, w, c = image.shape
-
+    i = 0
     while True:
         xmin = np.random.randint(0, SIZE-w, 1)[0]
         ymin = np.random.randint(0, SIZE-h, 1)[0]
@@ -39,10 +39,13 @@ def make_image(data, image_path, ratio=1):
         box = [xmin, ymin, xmax, ymax]
 
         iou = [compute_iou(box, b) for b in boxes]
-        if max(iou) < 0.02:
+        if max(iou) < 0.1:
             boxes.append(box)
             label.append(ID)
             break
+        i += 1
+        if i > 10:
+            return blank
 
     for i in range(w):
         for j in range(h):
@@ -56,7 +59,7 @@ def make_image(data, image_path, ratio=1):
 rootPath = '..\..\dataAndModel\data\mnist\\'
 image_paths = [rootPath + 'train\\' + file  for file in os.listdir(rootPath + 'train') ]
 
-SIZE =768
+SIZE =384# 512
 image_sizes = [3, 6, 3]
 images_num = 1000
 with open(rootPath + 'objtrainlab.txt', "w") as wf:

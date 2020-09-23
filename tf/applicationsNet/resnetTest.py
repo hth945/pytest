@@ -8,7 +8,7 @@ import tensorflow as tf
 #%%
 scal = 224
 sampleModel = tf.keras.applications.ResNet50V2(weights='imagenet',
-                                          include_top=False,
+                                          include_top=True,
                                           input_shape=(scal, scal, 3))
 sampleModel.trianable = False
 

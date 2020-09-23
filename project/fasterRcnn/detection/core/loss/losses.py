@@ -112,7 +112,7 @@ def rcnn_class_loss(target_matchs_list, rcnn_class_logits_list):
     loss = keras.losses.categorical_crossentropy(tf.one_hot(class_ids, depth=num_classes),
                                                  class_logits, from_logits=True)
 
-
+    # print('class_logits', class_logits)
     loss = tf.reduce_mean(loss) if tf.size(loss) > 0 else tf.constant(0.0)
     return loss
 
