@@ -28,3 +28,16 @@ plt.show()
 # plt.imshow(mask)
 # plt.show()
 # %%
+
+SIZE = 40
+mask2 = np.zeros([SIZE, SIZE],dtype=np.float32)
+contours = np.array([[1,1],[1,10],[20,10],[20,1]])
+
+cv2.polylines(mask2, pts=[contours], isClosed=True, color=(0.5), thickness=5)
+cv2.fillPoly(mask2, pts=[contours], color=(0.5))
+center, radius = cv2.minEnclosingCircle(contours)
+mask2[int(center[1]), int(center[0])] = 1.0
+
+plt.imshow(mask2)
+plt.show()
+# %%

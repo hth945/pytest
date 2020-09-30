@@ -39,7 +39,7 @@ def make_image(data, image_path, ratio=1):
         box = [xmin, ymin, xmax, ymax]
 
         iou = [compute_iou(box, b) for b in boxes]
-        if max(iou) < 0.1:
+        if max(iou) < 0.05:
             boxes.append(box)
             label.append(ID)
             break
@@ -59,8 +59,8 @@ def make_image(data, image_path, ratio=1):
 rootPath = '..\..\dataAndModel\data\mnist\\'
 image_paths = [rootPath + 'train\\' + file  for file in os.listdir(rootPath + 'train') ]
 
-SIZE =384# 512
-image_sizes = [3, 6, 3]
+SIZE =416# 512
+image_sizes = [1, 6, 3]
 images_num = 1000
 with open(rootPath + 'objtrainlab.txt', "w") as wf:
     image_num = 0
@@ -73,7 +73,7 @@ with open(rootPath + 'objtrainlab.txt', "w") as wf:
         bboxes_num = 0
 
         # ratios small, medium, big objects
-        ratios = [[0.9, 1.2], [2., 3, 4], [7., 9]]
+        ratios = [[7., 9], [2., 3, 4], [0.9, 1.2]]
         for i in range(len(ratios)):
             N = random.randint(0, image_sizes[i])
             if N !=0: bboxes_num += 1
