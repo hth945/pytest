@@ -1,0 +1,24 @@
+function computeHash (qstr, bytesHash) {
+    console.log(qstr)
+    var hash = 5381
+
+    for (var x in qstr) {
+        hash = (hash * 33) ^ qstr[x].charCodeAt()
+    }
+    return (hash & ((1 << (8 * bytesHash)) - 1)) || 1
+}
+
+function PrefixZero (num, length) {
+    return (Array(length).join('0') + num).slice(-length)
+}
+
+function genQstr (qstr) {
+    var hash = computeHash(qstr, 1)
+
+    console.log(hash)
+    console.log(qstr.length)
+
+    var qlenStr = qstr.length
+    var qhashStr = hash
+    return 'QDEF(MP_QSTR_' + qstr + ', (const byte*)"\\x' + PrefixZero(qhashStr.toString(16), 2) + '\\x' + PrefixZero(qlenStr.toString(16), 2) + '" "' + qstr + '")'
+}

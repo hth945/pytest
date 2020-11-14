@@ -1,0 +1,51 @@
+##myTest
+MEAN: [0, 0, 0]
+STD: [1, 1, 1]
+
+
+# 数据集配置
+DATASET:
+    DATA_DIR: "D:/sysDef/Documents/GitHub/pytest/dataAndModel/data/bcdi"
+    NUM_CLASSES: 7 
+    TEST_FILE_LIST: "D:/sysDef/Documents/GitHub/pytest/dataAndModel/data/bcdi/val_list.txt"
+    TRAIN_FILE_LIST: "D:/sysDef/Documents/GitHub/pytest/dataAndModel/data/bcdi/train_list.txt"
+    VAL_FILE_LIST: "D:/sysDef/Documents/GitHub/pytest/dataAndModel/data/bcdi/val_list.txt"
+    VIS_FILE_LIST: "D:/sysDef/Documents/GitHub/pytest/dataAndModel/data/bcdi/testA_list.txt"
+
+# 预训练模型配置
+MODEL:
+    MODEL_NAME: "unet"
+    DEFAULT_NORM_TYPE: "bn"
+
+# 其他配置
+TRAIN_CROP_SIZE: (256, 256)
+EVAL_CROP_SIZE: (256, 256)
+AUG:
+    AUG_METHOD: "unpadding"
+    FIX_RESIZE_SIZE: (256, 256)
+
+    ##myTest
+#    FLIP: True
+#    FLIP_RATIO: 0.5
+    RICH_CROP:
+        ENABLE: True
+        MAX_ROTATION: 0
+        MIN_AREA_RATIO: 0
+        ASPECT_RATIO: 0
+        BRIGHTNESS_JITTER_RATIO: 0
+        SATURATION_JITTER_RATIO: 0
+        CONTRAST_JITTER_RATIO: 0
+        BLUR: False
+
+BATCH_SIZE: 8
+TRAIN:
+    PRETRAINED_MODEL_DIR: "./pretrained_model/unet_bn_coco/"
+    MODEL_SAVE_DIR: "./saved_model/unet/"
+    SNAPSHOT_EPOCH: 1
+TEST:
+    TEST_MODEL: "./saved_model/unet/final"
+SOLVER:
+    NUM_EPOCHS: 200
+    LR: 0.003
+    LR_POLICY: "poly"
+    OPTIMIZER: "sgd"
