@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title> WebNet </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+  </head>
+ 
+  <body>
+ 
+    <h3>7. Upload File Test</h3>
+    文件上传模块可以用于上传文件到指定的目录，这里上传到根目录下的 /upload 目录。
+    <br/><br/>
+    <form name="upload" method="POST" enctype="multipart/form-data" action="/upload">
+      <input type="file" name="file1" >
+      <input type="submit" name="submit" value="上传">
+    </form>
+    <br/>
+    <a href="/upload">点击浏览上传文件的目录</a>
+    <br/><br/>
+	
+	<form method="post" action="http://192.168.1.30/cgi-bin/calc">
+		<input type="text" name="a" value="1">
+		<br>
+		<input type="submit" value="计算">
+	</form>
+	
+	pythonCode: <input type="text" name="pythonCode" id="pythonCode"><br>
+	<button type="button" onclick="pythonCode()">运行</button>
+	
+	<div id="demo1">
+
+	<h1>XMLHttpRequest 对象</h1>
+
+	<button type="button" onclick="loadDoc('/upload/123.txt', myFunction)">更改内容
+	</button>
+	</div>
+	<div id="demo"></div>
+  </body>
+  
+ <script>
+ function pythonCode() {
+  var xhttp;
+  var url = "/cgi-bin/runPythonString";
+  
+  
+  xhttp=new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("demo").innerHTML = this.responseText;
+	  console.log(this.responseText);
+    }
+  };
+  
+  console.log("txt: "+document.getElementById("pythonCode").value);
+ 
+  var str = "?pythonCode=" + document.getElementById("pythonCode").value;
+  xhttp.open("GET", url+str, true);
+  console.log(str);
+  xhttp.send();
+}
+
+ 
+function loadDoc(url, cFunction) {
+  var xhttp;
+  xhttp=new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      cFunction(this);
+    }
+  };
+  xhttp.open("GET", url, true);
+  xhttp.send();
+}
+function myFunction(xhttp) {
+  document.getElementById("demo").innerHTML =
+  xhttp.responseText;
+}
+</script>
+
+</html>
