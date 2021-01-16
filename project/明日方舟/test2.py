@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import cv2
 import numpy as np
-import pyautogui
+# import pyautogui
 import random
 
+os.environ['Path']=os.environ['Path']+';D:\ChangZhi\dnplayer2'
+os.system('set path')
 def get_screenshot(id=0):
     os.system('adb shell screencap -p /sdcard/%s.png' % str(0))
     os.system('adb pull /sdcard/0.png ./%s.png ' % str(id))
@@ -66,17 +68,20 @@ def runClick(templatePath,minRange=0.02,lastTemplatePath=None,lastTemplateMinRan
             if (min_val < lastTemplateMinRange):
                 print('click')
                 adbClick(px, py)
-        time.sleep(1)
+        time.sleep(20)
         # if time.time() - begin_time > (maxTime/1000.0):
+
         #     raise Exception("templatePath :", templatePath)
 
 i = 0
-while i < 100:
+while i < 1000:
     i+=1
     print('1')
     runClick('startXL.png',lastTemplatePath='endX.png', lastTemplateMinRange=0.05)
+    time.sleep(5)
     print('2')
     runClick('startX2.png')
+    time.sleep(5)
     print('3')
     runClick('endX.png',minRange=0.05)
 

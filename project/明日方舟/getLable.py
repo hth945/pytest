@@ -39,7 +39,7 @@ def on_mouse(event, x, y, flags,param):
         #     drowIOU(img,iou=iou)
         # print(iou)
 
-img = cv2.imread('start1.png')
+img = cv2.imread('src2.png')
 cv2.namedWindow('image')
 cv2.imshow('image', img)
 cv2.setMouseCallback('image', on_mouse,img)
