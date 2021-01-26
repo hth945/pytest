@@ -31,7 +31,11 @@
 	function uploadFileToServer() {
 		var uploadFile = document.getElementById("upload_file_id"); //文件名与文件路径
 		var uploadTip = document.getElementById("myDebugText");  // 返回结果
-
+		var uploadPath = document.getElementById("uploadPath").value; 
+		if (uploadPath=="")
+		{
+			uploadPath="/test";
+		}
 		if (uploadFile.value == "") {
 			uploadTip.innerText = "请选择一个文件";
 		} else {
@@ -50,7 +54,7 @@
 				}
 
 				fReader.onload = function (e) {  //文件加载成功
-					xhreq.open("POST", "/test", true);
+					xhreq.open("POST", uploadPath, true);
 					xhreq.setRequestHeader("Content-type", "application/octet-stream"); //流类型
 					xhreq.setRequestHeader("uploadFileLen", uploadFile.files[0].size);     //文件大小
 					xhreq.setRequestHeader("uploadfile_name", uploadFile.files[0].name); //兼容中文
@@ -96,12 +100,13 @@
 <body>
 
 	<div id="myDebugText">debug	</div>
+	uploadPath: <input type="text" name="uploadPath" id="uploadPath"  value="/test"> 
 	upload_file_id: <input type="file" name="upload_file_id" id="upload_file_id"><br>
 	<button type="button" onclick="uploadFileToServer()">上传</button><br>
 	</div><br><br><br>
 
 
-	runcmd: <input type="text" name="runcmd" id="runcmd"> <button type="button" onclick="runcmd()">运行</button>
+	runcmd: <input type="text" name="runcmd" id="runcmd" value="connection"> <button type="button" onclick="runcmd()">运行</button>
 </body>
 
 </html>

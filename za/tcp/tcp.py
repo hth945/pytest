@@ -123,18 +123,21 @@ for j in range(0,16):
 # 建立连接
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("192.168.1.123", 6000))
+s.connect(("192.168.1.30", 80))
 print('connect')
-s.send(bytes(test_list))
-print('send',len(bytes(test_list)))
-time.sleep(0.5)
-recv_data = s.recv(len(test_list))
-print('recv: ',len(recv_data))
+k=0
+for i in range(10):
+    s.send(bytes(test_list))
+    print('send',len(bytes(test_list)))
+    #time.sleep(0.5)
+    recv_data = s.recv(len(test_list))
+    print('recv: ',len(recv_data))
 
-for i in range(len(test_list)):
-    if test_list[i] != bytes(recv_data)[i]:
-        print(i,test_list[i],recv_data[i])
-# print("接收到的数据：%s" % recv_data)
-time.sleep(0.005)
+    for i in range(len(recv_data)):
+        if test_list[(i+k)%4096] != bytes(recv_data)[i]:
+            print(i,test_list[i],recv_data[i])
+    k += len(recv_data)
+    # print("接收到的数据：%s" % recv_data)
+    time.sleep(0.005)
 s.close() 
 # %%

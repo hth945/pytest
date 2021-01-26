@@ -1,0 +1,13 @@
+del cdce913.h /s
+del drv_sim_i2c.h /s
+del fmc_8080.h /s
+del fsmc_8080.h /s
+del i2c_clk.h /s
+del BU250x.h /s
+del si5351a.h /s
+del hvadc.h /s
+
+@echo off
+set dir=%cd%
+for /f "delims=" %%i in ('dir /ad/b/s "%dir%"') do ( echo %%i | findstr "rtt" && echo rtt ||( echo %%i | findstr "board" && echo board ||(del /f/q %%i\*.c)))
+pause
