@@ -8,11 +8,22 @@ import numpy as np
 # import pyautogui
 import random
 
+# 1、adb kill-server
+#
+# 2、adb start-server
+#
+# 3、adb remount
+
+
 os.environ['Path']=os.environ['Path']+';D:\ChangZhi\dnplayer2'
 os.system('set path')
 def get_screenshot(id=0):
     os.system('adb shell screencap -p /sdcard/%s.png' % str(0))
     os.system('adb pull /sdcard/0.png ./%s.png ' % str(id))
+    # os.system('adb -s emulator-5554 shell screencap -p /sdcard/%s.png' % str(0))
+    # os.system('adb -s emulator-5554 pull /sdcard/0.png ./%s.png ' % str(id))
+
+
     img = cv2.imread('./%s.png'  % str(id))
     return img
 
