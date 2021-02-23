@@ -5,7 +5,7 @@ from userfunc import *
 import skyFun
 from sdcard.skyClass import * 
 
-b = skyFun.getBinData('123')
+b = skyFun.getBinData('pyBinTest')
 
 print(type(b))
 b[0]

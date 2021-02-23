@@ -11,4 +11,7 @@ tttt= hellortt2.HelloRtt()
 
 import ssTest
 
-print(ssTest.add())
+print(ssTest.addTest())
+
+
+

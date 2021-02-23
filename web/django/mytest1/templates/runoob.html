@@ -1,0 +1,22 @@
+
+{% load my_tags %}
+
+<h1>{{ hello }}</h1>
+<p>{{ name }}</p>
+<p>{{ views_list }}</p>   # 取出整个列表
+<p>{{ views_list.0 }}</p> # 取出列表的第一个元素
+<p>{{ views_dict }}</p>
+<p>{{ views_dict.name }}</p>
+
+<p>{{ name1|default:"菜鸟教程666" }}</p>
+<p>{{ name2|length}}</p>
+<p>{{ views_str|safe }}</p>
+
+
+{% include "nav.html" %}
+
+<p>{{ 11|my_filter:22 }}</p>
+<p>{% my_tag1 11 22 33 %}</p>
+{% my_html "zzz" "xxx" %}
+
+

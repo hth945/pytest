@@ -1,0 +1,10 @@
+POST / HTTP/1.1
+Accept-Encoding: identity
+Content-Length: 404
+Host: localhost:8000
+User-Agent: Python-urllib/3.7
+Content-Type: text/xml; charset=utf-8
+Soapaction: "say_hello"
+Connection: close
+
+<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="spyne.examples.hello.soap" xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns1:Body><ns0:say_hello><ns0:name>hth9456</ns0:name><ns0:times>2</ns0:times></ns0:say_hello></ns1:Body></SOAP-ENV:Envelope>

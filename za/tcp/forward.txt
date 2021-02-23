@@ -1,0 +1,72 @@
+
+------------
+
+------------
+
+---------cli.rec--------
+GET /?wsdl HTTP/1.1
+Accept-Encoding: identity
+Host: localhost:7999
+User-Agent: Python-urllib/3.7
+Connection: close
+
+
+---------ser.rec--------
+HTTP/1.0 200 OK
+Date: Mon, 22 Feb 2021 06:44:01 GMT
+Server: WSGIServer/0.2 CPython/3.7.6
+Content-Type: text/xml; charset=utf-8
+Content-Length: 3229
+
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:plink="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:wsdlsoap11="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdlsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap11enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap11env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap12env="http://www.w3.org/2003/05/soap-envelope" xmlns:soap12enc="http://www.w3.org/2003/05/soap-encoding" xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing" xmlns:xop="http://www.w3.org/2004/08/xop/include" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="spyne.examples.hello.soap" targetNamespace="spyne.examples.hello.soap" name="Application"><wsdl:types><xs:schema targetNamespace="spyne.examples.hello.soap" elementFormDefault="qualified"><xs:complexType name="stringArray"><xs:sequence><xs:element name="string" type="xs:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/></xs:sequence></xs:complexType><xs:complexType name="say_hello"><xs:sequence><xs:element name="name" type="xs:string" minOccurs="0" nillable="true"/><xs:element name="times" type="xs:integer" minOccurs="0" nillable="true"/></xs:sequence></xs:complexType><xs:complexType name="say_helloResponse"><xs:sequence><xs:element name="say_helloResult" type="tns:stringArray" minOccurs="0" nillable="true"/></xs:sequence></xs:complexType><xs:element name="stringArray" type="tns:stringArray"/><xs:element name="say_hello" type="tns:say_hello"/><xs:element name="say_helloResponse" type="tns:say_helloResponse"/></xs:schema></wsdl:types><wsdl:message name="say_hello"><wsdl:part name="say_hello" element="tns:say_hello"/></wsdl:message><wsdl:message name="say_helloResponse"><wsdl:part name="say_helloResponse" element="tns:say_helloResponse"/></wsdl:message><wsdl:service name="HelloWorldService"><wsdl:port name="Application" binding="tns:Application"><wsdlsoap11:address location="http://localhost:7999/"/></wsdl:port></wsdl:service><wsdl:portType name="Application"><wsdl:operation name="say_hello" parameterOrder="say_hello"><wsdl:documentation>Docstrings for service methods appear as documentation in the wsdl.
+
+        &lt;b&gt;What fun!&lt;/b&gt;
+
+        @param name: the name to say hello to
+
+        @param times: the number of times to say hello
+
+        @return  When returning an iterable, you can use any type of python iterable. Here, we chose to use generators.
+
+        </wsdl:documentation><wsdl:input name="say_hello" message="tns:say_hello"/><wsdl:output name="say_helloResponse" message="tns:say_helloResponse"/></wsdl:operation></wsdl:portType><wsdl:binding name="Application" type="tns:Application"><wsdlsoap11:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/><wsdl:operation name="say_hello"><wsdlsoap11:operation soapAction="say_hello" style="document"/><wsdl:input name="say_hello"><wsdlsoap11:body use="literal"/></wsdl:input><wsdl:output name="say_helloResponse"><wsdlsoap11:body use="literal"/></wsdl:output></wsdl:operation></wsdl:binding></wsdl:definitions>
+---------cli.rec--------
+POST / HTTP/1.1
+Accept-Encoding: identity
+Content-Length: 404
+Host: localhost:7999
+User-Agent: Python-urllib/3.7
+Content-Type: text/xml; charset=utf-8
+Soapaction: "say_hello"
+Connection: close
+
+<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="spyne.examples.hello.soap"><SOAP-ENV:Header/><ns0:Body><ns1:say_hello><ns1:name>hth9456</ns1:name><ns1:times>2</ns1:times></ns1:say_hello></ns0:Body></SOAP-ENV:Envelope>
+---------ser.rec--------
+HTTP/1.0 200 OK
+Date: Mon, 22 Feb 2021 06:44:04 GMT
+Server: WSGIServer/0.2 CPython/3.7.6
+Content-Type: text/xml; charset=utf-8
+Content-Length: 379
+
+<?xml version='1.0' encoding='UTF-8'?>
+<soap11env:Envelope xmlns:soap11env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="spyne.examples.hello.soap"><soap11env:Body><tns:say_helloResponse><tns:say_helloResult><tns:string>Hello, hth9456</tns:string><tns:string>Hello, hth9456</tns:string></tns:say_helloResult></tns:say_helloResponse></soap11env:Body></soap11env:Envelope>
+---------cli.rec--------
+POST / HTTP/1.1
+Accept-Encoding: identity
+Content-Length: 404
+Host: localhost:7999
+User-Agent: Python-urllib/3.7
+Content-Type: text/xml; charset=utf-8
+Soapaction: "say_hello"
+Connection: close
+
+<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="spyne.examples.hello.soap"><SOAP-ENV:Header/><ns0:Body><ns1:say_hello><ns1:name>hth9456</ns1:name><ns1:times>2</ns1:times></ns1:say_hello></ns0:Body></SOAP-ENV:Envelope>
+---------ser.rec--------
+HTTP/1.0 200 OK
+Date: Mon, 22 Feb 2021 06:44:07 GMT
+Server: WSGIServer/0.2 CPython/3.7.6
+Content-Type: text/xml; charset=utf-8
+Content-Length: 379
+
+<?xml version='1.0' encoding='UTF-8'?>
+<soap11env:Envelope xmlns:soap11env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="spyne.examples.hello.soap"><soap11env:Body><tns:say_helloResponse><tns:say_helloResult><tns:string>Hello, hth9456</tns:string><tns:string>Hello, hth9456</tns:string></tns:say_helloResult></tns:say_helloResponse></soap11env:Body></soap11env:Envelope>
