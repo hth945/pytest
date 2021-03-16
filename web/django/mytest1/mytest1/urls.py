@@ -26,5 +26,5 @@ urlpatterns = [
     path('testdb/', testdb.testdb),
     path('add_book/', views.add_book),
     path('add_emp/', views.add_emp),
-    # url(r'^$', views.hello),
+    url(r'^$', views.runoob),
 ]
