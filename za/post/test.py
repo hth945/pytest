@@ -1,7 +1,8 @@
 #%%
 import requests
 # url = "http://127.0.0.1"
-url = "http://192.168.1.10/runcmd"
+# url = "http://192.168.1.10/runcmd"
+url = "http://3p586243x1.zicp.vip:13546"
 # data = bytes("connection\r\n")
 data = "connection\r\n"
 res = requests.post(url=url,
