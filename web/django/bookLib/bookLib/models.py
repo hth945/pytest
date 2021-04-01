@@ -8,6 +8,33 @@ def custom_path(instance, filename):
     filename = '{}.{}'.format(uuid.uuid4().hex[:10], ext)
     return filename
 
+
+class Reader(models.Model):
+    class Meta:
+        verbose_name = '读者'
+        verbose_name_plural = '读者'
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='读者')
+    name = models.CharField(max_length=16, unique=True, verbose_name='姓名')
+    phone = models.IntegerField(unique=True, verbose_name='电话')
+    max_borrowing = models.IntegerField(default=5, verbose_name='可借数量')
+    balance = models.FloatField(default=0.0, verbose_name='余额')
+    photo = models.ImageField(blank=True, upload_to=custom_path, verbose_name='头像')
+
+    STATUS_CHOICES = (
+        (0, 'normal'),
+        (-1, 'overdue')
+    )
+    status = models.IntegerField(
+        choices=STATUS_CHOICES,
+        default=0,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+
 class Book(models.Model):
     class Meta:
         verbose_name = '图书'
@@ -29,3 +56,18 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title + self.author
+
+class Borrowing(models.Model):
+    class Meta:
+        verbose_name = '借阅'
+        verbose_name_plural = '借阅'
+
+    reader = models.ForeignKey(Reader, on_delete=models.CASCADE, verbose_name='读者')
+    ISBN = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='ISBN')
+    date_issued = models.DateField(verbose_name='借出时间')
+    date_due_to_returned = models.DateField(verbose_name='应还时间')
+    date_returned = models.DateField(null=True, verbose_name='还书时间')
+    amount_of_fine = models.FloatField(default=0.0, verbose_name='欠款')
+
+    def __str__(self):
+        return '{} 借了 {}'.format(self.reader, self.ISBN)

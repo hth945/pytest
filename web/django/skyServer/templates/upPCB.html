@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %} 思凯生产管理系统 {% endblock %}
+
+
+{% block content %}
+
+    <div class="container myContainer">
+        <form action="/search/" method="GET">
+              {% csrf_token %}
+              {% for field in form %}
+                <div>#}
+                    <label for="id_{{ field.name }}">{{ field.label }}</label>
+                    {{ field }} <span>{{ field.errors.0 }}</span>
+                </div>
+              {% endfor %}
+    <input type="submit">
+        </form>
+    </div>
+
+{% endblock %}
+
+
+
