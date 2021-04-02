@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.01.21
+Created by auto_sdk on 2021.03.11
 '''
 from dingtalk.api.base import RestApi
 class OapiSceneservicegroupGroupGetRequest(RestApi):

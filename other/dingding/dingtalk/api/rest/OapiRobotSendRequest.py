@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2020.05.28
+Created by auto_sdk on 2021.03.30
 '''
 from dingtalk.api.base import RestApi
 class OapiRobotSendRequest(RestApi):

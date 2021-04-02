@@ -25,7 +25,7 @@ a = top.api.UserGetRequest("gw.api.tbsandbox.com")
 a = top.api.UserGetRequest()
 
 '''
-a = top.api.UserGetRequest()
+a = top.api.UserGetRequest("eco.taobao.com",443)
 
 
 '''
@@ -33,11 +33,13 @@ a = top.api.UserGetRequest()
 a.set_app_info(top.appinfo("appkey","*******"))
 '''
 
+a.set_app_info(top.appinfo("*****","********************"))
+
 a.fields="nick"
 
 try:
     f= a.getResponse()
     print(f)
-except Exception,e:
+except Exception as e:
     print(e)
     

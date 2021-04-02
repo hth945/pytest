@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2020.11.13
+Created by auto_sdk on 2021.03.15
 '''
 from dingtalk.api.base import RestApi
 class OapiMessageCorpconversationSendbytemplateRequest(RestApi):

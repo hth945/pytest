@@ -1,9 +1,8 @@
 #%%
 from socket import *
- 
 serverSocket = socket(AF_INET,SOCK_STREAM)
  
-serverSocket.bind(("",8000))
+serverSocket.bind(("0.0.0.0",80))
 serverSocket.listen(5)
 print("开始监听")
 

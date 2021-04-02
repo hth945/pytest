@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.02.22
+Created by auto_sdk on 2021.03.23
 '''
 from dingtalk.api.base import RestApi
 class OapiAttendanceVacationTypeListRequest(RestApi):

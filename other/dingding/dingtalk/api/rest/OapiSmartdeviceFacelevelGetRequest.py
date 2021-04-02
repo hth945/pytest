@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2020.06.28
+Created by auto_sdk on 2021.03.19
 '''
 from dingtalk.api.base import RestApi
 class OapiSmartdeviceFacelevelGetRequest(RestApi):

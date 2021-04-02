@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.03.03
+Created by auto_sdk on 2021.03.26
 '''
 from dingtalk.api.base import RestApi
 class OapiPlanetomFeedsCreateRequest(RestApi):
@@ -14,6 +14,7 @@ class OapiPlanetomFeedsCreateRequest(RestApi):
 		self.introduction = None
 		self.open_app_id = None
 		self.pic_introduction_url = None
+		self.pre_video_url = None
 		self.title = None
 
 	def getHttpMethod(self):

@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.02.03
+Created by auto_sdk on 2021.04.01
 '''
 from dingtalk.api.base import RestApi
 class OapiImChatScencegroupFileDownloadurlGetRequest(RestApi):

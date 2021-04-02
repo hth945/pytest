@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2019.12.04
+Created by auto_sdk on 2021.03.25
 '''
 from dingtalk.api.base import RestApi
 class OapiSmartworkHrmMasterSaveRequest(RestApi):

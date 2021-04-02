@@ -38,6 +38,6 @@ try:
     print("begin");
     f= a.getResponse()
     print(f)
-except Exception,e:
+except Exception as e:
     print(e)
     

@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2020.11.03
+Created by auto_sdk on 2021.03.12
 '''
 from dingtalk.api.base import RestApi
 class OapiSmartdeviceMeetingroomParticipantListRequest(RestApi):

@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2020.09.08
+Created by auto_sdk on 2021.04.01
 '''
 from dingtalk.api.base import RestApi
 class OapiDingtalkImpaasMessageCrossdomainSendRequest(RestApi):

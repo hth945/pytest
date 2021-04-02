@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.01.14
+Created by auto_sdk on 2021.03.15
 '''
 from dingtalk.api.base import RestApi
 class OapiV2UserCreateRequest(RestApi):
@@ -10,11 +10,14 @@ class OapiV2UserCreateRequest(RestApi):
 		self.dept_title_list = None
 		self.email = None
 		self.exclusive_account = None
+		self.exclusive_account_type = None
 		self.extension = None
 		self.hide_mobile = None
 		self.hired_date = None
+		self.init_password = None
 		self.job_number = None
 		self.login_email = None
+		self.login_id = None
 		self.mobile = None
 		self.name = None
 		self.org_email = None

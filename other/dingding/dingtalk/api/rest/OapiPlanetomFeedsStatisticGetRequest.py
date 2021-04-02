@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.03.03
+Created by auto_sdk on 2021.03.26
 '''
 from dingtalk.api.base import RestApi
 class OapiPlanetomFeedsStatisticGetRequest(RestApi):

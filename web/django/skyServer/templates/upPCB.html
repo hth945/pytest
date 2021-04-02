@@ -6,15 +6,14 @@
 {% block content %}
 
     <div class="container myContainer">
-        <form action="/search/" method="GET">
+        {{ upresult }}
+
+        <form action="" method="POST">
               {% csrf_token %}
-              {% for field in form %}
-                <div>#}
-                    <label for="id_{{ field.name }}">{{ field.label }}</label>
-                    {{ field }} <span>{{ field.errors.0 }}</span>
-                </div>
-              {% endfor %}
-    <input type="submit">
+            <table>
+            {{ upPCBForm }}<!--I also tried .as_p, .as_ul...-->
+            </table>
+            <input type="submit" value="Submit" />
         </form>
     </div>
 

@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.01.28
+Created by auto_sdk on 2021.03.11
 '''
 from dingtalk.api.base import RestApi
 class OapiCrmObjectdataQueryRequest(RestApi):
@@ -9,6 +9,7 @@ class OapiCrmObjectdataQueryRequest(RestApi):
 		self.cursor = None
 		self.name = None
 		self.page_size = None
+		self.query_dsl = None
 
 	def getHttpMethod(self):
 		return 'POST'

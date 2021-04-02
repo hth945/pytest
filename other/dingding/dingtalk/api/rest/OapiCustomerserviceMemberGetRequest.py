@@ -1,10 +1,12 @@
 '''
-Created by auto_sdk on 2021.02.04
+Created by auto_sdk on 2021.03.29
 '''
 from dingtalk.api.base import RestApi
 class OapiCustomerserviceMemberGetRequest(RestApi):
 	def __init__(self,url=None):
 		RestApi.__init__(self,url)
+		self.ding_corp_id = None
+		self.open_instance_id = None
 		self.production_type = None
 		self.third_tenant_id = None
 		self.user_id = None

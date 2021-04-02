@@ -18,3 +18,4 @@ data
 *.avi
 *.tar.gz
 *.xlsx
+*.sqlite3

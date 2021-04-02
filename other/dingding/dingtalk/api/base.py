@@ -5,10 +5,10 @@ Created on 2018-9-17
 @author: xiaoxuan.lp
 '''
 
-try: import httplib
+try: import http.client
 except ImportError:
     import http.client as httplib
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 import hashlib
 import json
@@ -17,7 +17,6 @@ import itertools
 import mimetypes
 import hmac
 import base64
-from codecs import encode
 
 '''
 定义一些系统变量
@@ -47,19 +46,19 @@ def sign(secret, parameters):
     #===========================================================================
     # 如果parameters 是字典类的话
     if hasattr(parameters, "items"):
-        keys = parameters.keys()
+        keys = list(parameters.keys())
         keys.sort()
         
         parameters = "%s%s%s" % (secret,
             str().join('%s%s' % (key, parameters[key]) for key in keys),
             secret)
-    sign = hashlib.md5(parameters).hexdigest().upper()
+    sign = hashlib.md5(parameters.encode("utf-8")).hexdigest().upper()
     return sign
 
 def mixStr(pstr):
     if(isinstance(pstr, str)):
         return pstr
-    elif(isinstance(pstr, unicode)):
+    elif(isinstance(pstr, str)):
         return pstr.encode('utf-8')
     else:
         return str(pstr)
@@ -91,7 +90,7 @@ class MultiPartForm(object):
         body = fileHandle.read()
         if mimetype is None:
             mimetype = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
-        self.files.append((mixStr(fieldname), mixStr(filename), mixStr(mimetype), body))
+        self.files.append((mixStr(fieldname), mixStr(filename), mixStr(mimetype), mixStr(body)))
         return
     
     def __str__(self):
@@ -105,23 +104,23 @@ class MultiPartForm(object):
         
         # Add the form fields
         parts.extend(
-            [ encode(part_boundary),
-              encode('Content-Disposition: form-data; name="%s"' % name),
-              encode('Content-Type: text/plain; charset=UTF-8'),
-              encode(''),
-              encode(value),
+            [ part_boundary,
+              'Content-Disposition: form-data; name="%s"' % name,
+              'Content-Type: text/plain; charset=UTF-8',
+              '',
+              value,
             ]
             for name, value in self.form_fields
             )
         
         # Add the files to upload
         parts.extend(
-            [ encode(part_boundary),
-              encode('Content-Disposition: form-data; name="%s"; filename="%s"' % \
-                 (field_name, filename)),
-              encode('Content-Type: %s' % content_type),
-              encode('Content-Transfer-Encoding: binary'),
-              encode(''),
+            [ part_boundary,
+              'Content-Disposition: form-data; name="%s"; filename="%s"' % \
+                 (field_name, filename),
+              'Content-Type: %s' % content_type,
+              'Content-Transfer-Encoding: binary',
+              '',
               body,
             ]
             for field_name, filename, content_type, body in self.files
@@ -216,9 +215,9 @@ class RestApi(object):
         # 获取response结果
         #=======================================================================
         if(self.__port == 443):
-            connection = httplib.HTTPSConnection(self.__domain, self.__port, None, None, False, timeout)
+            connection = http.client.HTTPSConnection(self.__domain, self.__port, None, None, timeout)
         else:
-            connection = httplib.HTTPConnection(self.__domain, self.__port, False, timeout)
+            connection = http.client.HTTPConnection(self.__domain, self.__port, timeout)
         sys_parameters = {
             P_PARTNER_ID: SYSTEM_GENERATE_VERSION,
         }
@@ -231,7 +230,7 @@ class RestApi(object):
         header = self.get_request_header();
         if(self.getMultipartParas()):
             form = MultiPartForm()
-            for key, value in application_parameter.items():
+            for key, value in list(application_parameter.items()):
                 form.add_field(key, value)
             for key in self.getMultipartParas():
                 fileitem = getattr(self,key)
@@ -240,16 +239,16 @@ class RestApi(object):
             body = str(form)
             header['Content-type'] = form.get_content_type()
         else:
-            body = urllib.urlencode(application_parameter)
+            body = urllib.parse.urlencode(application_parameter)
         
         if(accessKey != ''):
             timestamp = str(int(round(time.time()))) + '000'
-            print("timestamp:" + timestamp)
+            print(("timestamp:" + timestamp))
             canonicalString = self.getCanonicalStringForIsv(timestamp, suiteTicket)
-            print("canonicalString:" + canonicalString)
-            print("accessSecret:" + accessSecret)
+            print(("canonicalString:" + canonicalString))
+            print(("accessSecret:" + accessSecret))
             signature = self.computeSignature(accessSecret, canonicalString)
-            print("signature:" + signature)
+            print(("signature:" + signature))
             ps = {}
             ps["accessKey"] = accessKey
             ps["signature"] = signature
@@ -258,12 +257,12 @@ class RestApi(object):
                 ps["suiteTicket"] = suiteTicket
             if(corpId != ''):
                 ps["corpId"] = corpId
-            queryStr = urllib.urlencode(ps)
+            queryStr = urllib.parse.urlencode(ps)
             if (self.__path.find("?") > 0):
                 fullPath = self.__path + "&" + queryStr
             else:
                 fullPath = self.__path + "?" + queryStr
-            print("fullPath:" + fullPath)
+            print(("fullPath:" + fullPath))
         else:
             if (self.__path.find("?") > 0):
                 fullPath = (self.__path + "&access_token=" + str(authrize)) if len(str(authrize)) > 0 else self.__path
@@ -288,7 +287,7 @@ class RestApi(object):
         result = response.read()
         # print("result:" + result)
         jsonobj = json.loads(result)
-        if jsonobj.has_key(P_CODE) and jsonobj[P_CODE] != 0:
+        if P_CODE in jsonobj and jsonobj[P_CODE] != 0:
             error = TopException()
             error.errcode = jsonobj[P_CODE]
             error.errmsg = jsonobj[P_MSG]
@@ -310,7 +309,7 @@ class RestApi(object):
     
     def getApplicationParameters(self):
         application_parameter = {}
-        for key, value in self.__dict__.iteritems():
+        for key, value in self.__dict__.items():
             if not key.startswith("__") and not key in self.getMultipartParas() and not key.startswith("_RestApi__") and value is not None :
                 if(key.startswith("_")):
                     application_parameter[key[1:]] = value
@@ -318,7 +317,7 @@ class RestApi(object):
                     application_parameter[key] = value
         #查询翻译字典来规避一些关键字属性
         translate_parameter = self.getTranslateParas()
-        for key, value in application_parameter.iteritems():
+        for key, value in application_parameter.items():
             if key in translate_parameter:
                 application_parameter[translate_parameter[key]] = application_parameter[key]
                 del application_parameter[key]

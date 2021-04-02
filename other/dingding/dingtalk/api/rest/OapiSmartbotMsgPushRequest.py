@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2020.10.27
+Created by auto_sdk on 2021.03.19
 '''
 from dingtalk.api.base import RestApi
 class OapiSmartbotMsgPushRequest(RestApi):

@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2020.07.02
+Created by auto_sdk on 2021.03.18
 '''
 from dingtalk.api.base import RestApi
 class OapiUserGetRequest(RestApi):

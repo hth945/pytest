@@ -5,11 +5,11 @@ Created on 2012-7-3
 @author: lijie.ma
 '''
 
-try: import httplib
+try: import http.client
 except ImportError:
     import http.client as httplib
 import sys
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 import json
 import aliyun
@@ -28,7 +28,7 @@ def sign(accessKeySecret, parameters):
     # '''
     #===========================================================================
     # 如果parameters 是字典类的话
-    sortedParameters = sorted(parameters.items(), key=lambda parameters: parameters[0])
+    sortedParameters = sorted(list(parameters.items()), key=lambda parameters: parameters[0])
 
     canonicalizedQueryString = ''
     for (k,v) in sortedParameters:
@@ -42,7 +42,7 @@ def sign(accessKeySecret, parameters):
 
 def percent_encode(encodeStr):
     encodeStr = str(encodeStr)
-    res = urllib.quote(encodeStr.decode(sys.stdin.encoding).encode('utf8'), '')
+    res = urllib.parse.quote(encodeStr.decode(sys.stdin.encoding).encode('utf8'), '')
     res = res.replace('+', '%20')
     res = res.replace('*', '%2A')
     res = res.replace('%7E', '~')
@@ -51,7 +51,7 @@ def percent_encode(encodeStr):
 def mixStr(pstr):
     if(isinstance(pstr, str)):
         return pstr
-    elif(isinstance(pstr, unicode)):
+    elif(isinstance(pstr, str)):
         return pstr.encode('utf-8')
     else:
         return str(pstr)
@@ -199,7 +199,7 @@ class RestApi(object):
         #=======================================================================
         # 获取response结果
         #=======================================================================
-        connection = httplib.HTTPConnection(self.__domain, self.__port, timeout)
+        connection = http.client.HTTPConnection(self.__domain, self.__port, timeout)
         timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
         apiname_split = self.getapiname().split(".")
         parameters = { \
@@ -214,12 +214,12 @@ class RestApi(object):
                 'partner_id'        : '1.0',\
         }
         application_parameter = self.getApplicationParameters()
-        for key in application_parameter.keys():
+        for key in list(application_parameter.keys()):
             parameters[key] = application_parameter[key]
 
         signature = sign(self.__access_key_secret,parameters)
         parameters['Signature'] = signature
-        url = "/?" + urllib.urlencode(parameters)
+        url = "/?" + urllib.parse.urlencode(parameters)
         
         connection.connect()
         
@@ -243,7 +243,7 @@ class RestApi(object):
     
     def getApplicationParameters(self):
         application_parameter = {}
-        for key, value in self.__dict__.iteritems():
+        for key, value in self.__dict__.items():
             if not key.startswith("__") and not key in self.getMultipartParas() and not key.startswith("_RestApi__") and value is not None :
                 if(key.startswith("_")):
                     application_parameter[key[1:]] = value
@@ -251,7 +251,7 @@ class RestApi(object):
                     application_parameter[key] = value
         #查询翻译字典来规避一些关键字属性
         translate_parameter = self.getTranslateParas()
-        for key, value in application_parameter.iteritems():
+        for key, value in application_parameter.items():
             if key in translate_parameter:
                 application_parameter[translate_parameter[key]] = application_parameter[key]
                 del application_parameter[key]

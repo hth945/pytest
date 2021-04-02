@@ -22,7 +22,12 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^search/', views.PCB_search, name='PCB_search'),
     url(r'^upPCB/', views.upPCB, name='PCB_up'),
-
+    url(r'^login/', views.user_login, name='user_login'),
+    url(r'^dingLogin/', views.ding_url, name='dingLogin'),
+    url(r'^logout/', views.user_logout, name='user_logout'),
+    url(r'^register/', views.user_register, name='user_register'),
+    url(r'^set_password/', views.set_password, name='set_password'),
+    url(r'^about/', views.about, name='about'),
     # url(r'^login/', views.user_login, name='user_login'),
     # url(r'^search/', views.book_search, name='book_search'),
     # url(r'^$', views.hello),

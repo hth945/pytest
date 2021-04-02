@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2019.07.01
+Created by auto_sdk on 2021.03.16
 '''
 from dingtalk.api.base import RestApi
 class OapiAppstoreInternalOrderGetRequest(RestApi):

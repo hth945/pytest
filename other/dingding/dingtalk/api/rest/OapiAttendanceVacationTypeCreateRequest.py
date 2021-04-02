@@ -1,5 +1,5 @@
 '''
-Created by auto_sdk on 2021.02.22
+Created by auto_sdk on 2021.03.23
 '''
 from dingtalk.api.base import RestApi
 class OapiAttendanceVacationTypeCreateRequest(RestApi):
@@ -7,6 +7,7 @@ class OapiAttendanceVacationTypeCreateRequest(RestApi):
 		RestApi.__init__(self,url)
 		self.biz_type = None
 		self.extras = None
+		self.freedom_leave = None
 		self.hours_in_per_day = None
 		self.leave_name = None
 		self.leave_view_unit = None
