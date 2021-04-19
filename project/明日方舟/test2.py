@@ -79,7 +79,7 @@ def runClick(templatePath,minRange=0.02,lastTemplatePath=None,lastTemplateMinRan
             if (min_val < lastTemplateMinRange):
                 print('click')
                 adbClick(px, py)
-        time.sleep(20)
+        time.sleep(10)
         # if time.time() - begin_time > (maxTime/1000.0):
 
         #     raise Exception("templatePath :", templatePath)
