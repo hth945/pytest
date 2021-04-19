@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} 思凯生产管理系统 {% endblock %}
+
+
+{% block content %}
+
+    <div class="container myContainer">
+        {{ upresult }}
+
+        <form action="" method="POST">
+              {% csrf_token %}
+            <table>
+            {{ upPCBForm }}<!--I also tried .as_p, .as_ul...-->
+            </table>
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+{% endblock %}
+
+
+

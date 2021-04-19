@@ -1,5 +1,12 @@
 
 {% load my_tags %}
+{% load static %}
+
+<img src="{% static "1.txt" %}" alt="My image">
+
+
+<link rel="stylesheet" href="/static/plugins/bootstrap/css/bootstrap.css">
+{{name}}<img src="{% static "images/runoob-logo.png" %}" alt="runoob-logo">
 
 <h1>{{ hello }}</h1>
 <p>{{ name }}</p>
@@ -18,5 +25,8 @@
 <p>{{ 11|my_filter:22 }}</p>
 <p>{% my_tag1 11 22 33 %}</p>
 {% my_html "zzz" "xxx" %}
+
+
+
 
 
